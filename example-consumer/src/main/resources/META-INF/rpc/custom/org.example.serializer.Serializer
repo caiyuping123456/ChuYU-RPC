@@ -1,0 +1,1 @@
+kryo=org.example.serializer.KryoSerializer

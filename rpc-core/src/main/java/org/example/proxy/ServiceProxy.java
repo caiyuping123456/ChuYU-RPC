@@ -16,6 +16,8 @@ import org.example.config.RpcConfig;
 import org.example.constant.ProtocolConstant;
 import org.example.constant.RpcConstant;
 import org.example.http.tcp.VertxTcpClient;
+import org.example.loadbalancer.LoadBalancer;
+import org.example.loadbalancer.LoadBalancerFactory;
 import org.example.model.RpcRequest;
 import org.example.model.RpcResponse;
 import org.example.model.ServiceMetaInfo;
@@ -30,7 +32,9 @@ import org.example.serializer.SerializerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -86,8 +90,13 @@ public class ServiceProxy implements InvocationHandler {
             }
 
             // 暂时选择第一个服务实例（后续可替换为负载均衡策略）
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
-            System.out.println(selectedServiceMetaInfo);
+//            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+            // 负载均衡
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            // 将调用方法名（请求路径）作为负载均衡参数
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
             /*// 发送 HTTP 请求并处理响应
             // 根据注册中心中的服务端的信息向服务端发送请求
             try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())

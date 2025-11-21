@@ -42,10 +42,12 @@ public class VertxTcpClient {
         CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
         netClient.connect(serviceMetaInfo.getServicePort(), serviceMetaInfo.getServiceHost(),
                 result -> {
+                    //判断是否请求成功
                     if (!result.succeeded()) {
                         System.err.println("Failed to connect to TCP server");
                         return;
                     }
+                    //请求成功
                     NetSocket socket = result.result();
                     // 发送数据
                     // 构造消息
@@ -62,12 +64,14 @@ public class VertxTcpClient {
 
                     // 编码请求
                     try {
+                        //对请求进行编码（17字节）
                         Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
                         socket.write(encodeBuffer);
                     } catch (IOException e) {
                         throw new RuntimeException("协议消息编码错误");
                     }
 
+                    // 接受到服务端的响应
                     // 接收响应
                     TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
                             buffer -> {
@@ -80,10 +84,11 @@ public class VertxTcpClient {
                                 }
                             }
                     );
+                    // 将包装后的处理器注册到 NetSocket
                     socket.handler(bufferHandlerWrapper);
-
                 });
 
+        //这里是异步
         RpcResponse rpcResponse = responseFuture.get();
         // 记得关闭连接（修改后）
         netClient.close().toCompletionStage().toCompletableFuture().get(1, java.util.concurrent.TimeUnit.SECONDS);

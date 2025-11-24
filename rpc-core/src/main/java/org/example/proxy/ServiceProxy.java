@@ -15,6 +15,7 @@ import org.example.config.RegistryConfig;
 import org.example.config.RpcConfig;
 import org.example.constant.ProtocolConstant;
 import org.example.constant.RpcConstant;
+import org.example.fault.retry.RetryStrategyFactory;
 import org.example.http.tcp.VertxTcpClient;
 import org.example.loadbalancer.LoadBalancer;
 import org.example.loadbalancer.LoadBalancerFactory;
@@ -45,7 +46,7 @@ public class ServiceProxy implements InvocationHandler {
     /**
      * 调用代理
      *
-     * @return
+     * @return 这个是我们需要的调用对象
      * @throws Throwable
      */
     @Override
@@ -110,7 +111,13 @@ public class ServiceProxy implements InvocationHandler {
             }*/
 
             //封装
-            return VertxTcpClient.doRequest(rpcRequest,selectedServiceMetaInfo).getData();
+            //return VertxTcpClient.doRequest(rpcRequest,selectedServiceMetaInfo).getData();
+            /**
+             * 这里直接对TCP进行封装
+             */
+            return RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy()).doRetry(() -> {
+                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            }).getData();
 
           /*  //使用TCP
             Vertx vertx = Vertx.vertx();

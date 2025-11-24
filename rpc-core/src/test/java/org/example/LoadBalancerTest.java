@@ -14,30 +14,30 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ¸ºÔØ¾ùºâ²âÊÔ
+ * ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 public class LoadBalancerTest {
 
     /**
-     * Ëæ»ú
+     * ï¿½ï¿½ï¿½
      */
     // final LoadBalancer loadBalancer = new RandomLoadBalancer();
 
     /**
-     * ÂÖÑ¯
+     * ï¿½ï¿½Ñ¯
      */
     // final LoadBalancer loadBalancer = new RoundRobinLoadBalancer();
 
     /**
-     * Ò»ÖÂÐÔ¹þÏ£
+     * Ò»ï¿½ï¿½ï¿½Ô¹ï¿½Ï£
      */
     final LoadBalancer loadBalancer = new ConsistentHashLoadBalancer();
     @Test
     public void select() {
-        // ÇëÇó²ÎÊý
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("methodName", "1245523hahahasddsdsd");
-        // ·þÎñÁÐ±í
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
         ServiceMetaInfo serviceMetaInfo1 = new ServiceMetaInfo();
         serviceMetaInfo1.setServiceName("myService");
         serviceMetaInfo1.setServiceVersion("1.0");
@@ -49,7 +49,7 @@ public class LoadBalancerTest {
         serviceMetaInfo2.setServiceHost("yupi.icu");
         serviceMetaInfo2.setServicePort(80);
         List<ServiceMetaInfo> serviceMetaInfoList = Arrays.asList(serviceMetaInfo1,serviceMetaInfo2);
-        // Á¬Ðøµ÷ÓÃ 3 ´Î
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3 ï¿½ï¿½
         ServiceMetaInfo serviceMetaInfo = loadBalancer.select(requestParams,serviceMetaInfoList);
         System.out.println(serviceMetaInfo);
         Assert.assertNotNull(serviceMetaInfo);

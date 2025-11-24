@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.fault.retry.ExponentialBackoffRetryStrategy;
 import org.example.fault.retry.FixedIntervalRetryStrategy;
 import org.example.fault.retry.NoRetryStrategy;
 import org.example.fault.retry.RetryStrategy;
@@ -16,7 +17,13 @@ public class RetryStrategyTest {
     /**
      * 使用间隔重试
      */
-    RetryStrategy retryStrategy = new FixedIntervalRetryStrategy();
+//    RetryStrategy retryStrategy = new FixedIntervalRetryStrategy();
+
+    /**
+     * 指数退避重试机制
+     */
+    RetryStrategy retryStrategy = new ExponentialBackoffRetryStrategy();
+
     @Test
     public void doRetry() {
         try {

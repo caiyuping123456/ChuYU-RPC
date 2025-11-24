@@ -28,8 +28,8 @@ public class ExponentialBackoffRetryStrategy implements RetryStrategy{
                 .retryIfExceptionOfType(Exception.class)
                 //初始等待时间100L,指数因子5L
                 .withWaitStrategy(WaitStrategies.exponentialWait(100L, 5L, TimeUnit.SECONDS))
-                //重试3次
-                .withStopStrategy(StopStrategies.stopAfterAttempt(3))
+                //重试5次
+                .withStopStrategy(StopStrategies.stopAfterAttempt(5))
                 //监听
                 .withRetryListener(new RetryListener() {
                     @Override

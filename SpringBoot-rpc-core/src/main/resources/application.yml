@@ -1,0 +1,13 @@
+rpc:
+  name: chuyurpc
+  version: 1.0
+  serverPort: 8081
+  mock: false
+  serializer: json
+  registryConfig:
+    registry: etcd
+    address: http://localhost:2380
+    username: admin
+    password: 123456
+    timeout: 10000
+  retryStrategy: fixedInterval

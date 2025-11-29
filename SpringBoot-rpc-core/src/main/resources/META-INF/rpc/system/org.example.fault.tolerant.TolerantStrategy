@@ -1,0 +1,4 @@
+failSaft=org.example.fault.tolerant.FailSafeTolerantStrategy
+failBack=org.example.fault.tolerant.FailBackTolerantStrategy
+failOver=org.example.fault.tolerant.FailOverTolerantStrategy
+failFast=org.example.fault.tolerant.FailFastTolerantStrategy

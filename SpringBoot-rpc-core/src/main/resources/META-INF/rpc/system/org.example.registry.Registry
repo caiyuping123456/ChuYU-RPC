@@ -1,0 +1,2 @@
+redis=org.example.registry.RedisRegistry
+etcd=org.example.registry.EtcdRegistry

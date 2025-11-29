@@ -8,6 +8,9 @@
         <option value="$PROJECT_DIR$/rpc-spring-boot-start/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-Spring-Boot-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-Spring-Boot-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringBoot-rpc-core/pom.xml" />
+        <option value="$PROJECT_DIR$/Spring-rpc-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/Spring-rpc-consumer/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,0 +1,7 @@
+rpc:
+  name: caiyuping
+  serverPort: 9000
+  mock: false
+  serializer: json
+  registryConfig:
+    address: http://localhost:8888

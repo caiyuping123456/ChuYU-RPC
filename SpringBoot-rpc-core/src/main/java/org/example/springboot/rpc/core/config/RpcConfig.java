@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Data
-@Configuration
-@ConfigurationProperties(prefix = "rpc")
 public class RpcConfig {
 
     /**

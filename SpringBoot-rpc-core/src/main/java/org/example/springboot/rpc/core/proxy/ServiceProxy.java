@@ -2,6 +2,8 @@ package org.example.springboot.rpc.core.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import org.example.springboot.rpc.core.config.RpcApplication;
+import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
 import org.example.springboot.rpc.core.utils.JDKSerializer;
@@ -10,6 +12,7 @@ import org.example.springboot.rpc.core.utils.Serializer;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -35,9 +38,10 @@ public class ServiceProxy implements InvocationHandler {
         try {
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
+            //application
+            RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             // 发送请求
-            // todo 注意，这里地址被硬编码了（需要使用注册中心和服务发现机制解决）
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+            try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
                     .body(bodyBytes)
                     .execute()) {
                 byte[] result = httpResponse.bodyBytes();
@@ -48,5 +52,15 @@ public class ServiceProxy implements InvocationHandler {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 使用动态加载Url
+     * @param host
+     * @param port
+     * @return
+     */
+    private String getUrl(String host,Integer port){
+        return "http://"+host+":"+port.toString();
     }
 }

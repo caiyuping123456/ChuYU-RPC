@@ -2,6 +2,9 @@ rpc:
   name: caiyuping
   serverPort: 8080
   mock: false
-  serializer: hessian
+  serializer: json
   registryConfig:
-    address: http://localhost:8080
+    address: http://localhost:6379
+    registry: redis
+    username: root
+    password: 123456

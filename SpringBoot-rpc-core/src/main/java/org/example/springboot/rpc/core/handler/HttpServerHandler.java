@@ -7,7 +7,7 @@ import io.vertx.core.http.HttpServerResponse;
 import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
-import org.example.springboot.rpc.core.registry.LocalRegistry;
+import org.example.springboot.rpc.core.registry.impl.LocalRegistry;
 import org.example.springboot.rpc.core.serializer.Serializer;
 import org.example.springboot.rpc.core.serializer.SerializerManager;
 
@@ -19,6 +19,11 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
 
     @Override
     public void handle(HttpServerRequest httpServerRequest) {
+        // ...
+        System.out.println("Received request: " + httpServerRequest.method() +
+                " from: " + httpServerRequest.remoteAddress()); // 添加这行
+        // ...
+
         //指定序列化器
         final Serializer serializer = SerializerManager.getSerializer(RpcApplication.getRpcConfig().getSerializer());
 

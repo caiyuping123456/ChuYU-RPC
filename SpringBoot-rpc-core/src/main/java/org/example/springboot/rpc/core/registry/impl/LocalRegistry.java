@@ -1,4 +1,4 @@
-package org.example.springboot.rpc.core.registry;
+package org.example.springboot.rpc.core.registry.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.rpc.core.config.SpringContextHolder;

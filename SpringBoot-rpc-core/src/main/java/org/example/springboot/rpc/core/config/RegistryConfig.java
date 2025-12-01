@@ -14,17 +14,17 @@ public class RegistryConfig {
     private String registry = "etcd";
 
     /**
-     * 注册中心地址
+     * 注册中心地址(默认)
      */
-    private String address = "http://localhost:2380";
+    private String address = "http://localhost:2379";
 
     /**
-     * 用户名
+     * 用户名（默认）
      */
     private String username="admin";
 
     /**
-     * 密码
+     * 密码（默认）
      */
     private String password = "123456";
 

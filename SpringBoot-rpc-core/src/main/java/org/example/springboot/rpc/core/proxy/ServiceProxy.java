@@ -1,11 +1,16 @@
 package org.example.springboot.rpc.core.proxy;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
+import org.example.springboot.rpc.core.constant.RpcConstant;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
+import org.example.springboot.rpc.core.model.ServiceMetaInfo;
+import org.example.springboot.rpc.core.registry.Registry;
+import org.example.springboot.rpc.core.registry.RegistryManager;
 import org.example.springboot.rpc.core.serializer.Serializer;
 import org.example.springboot.rpc.core.serializer.SerializerManager;
 
@@ -13,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.List;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -28,9 +34,10 @@ public class ServiceProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws IOException {
         // 指定序列化器
         Serializer serializer = SerializerManager.getSerializer(RpcApplication.getRpcConfig().getSerializer());
+        String serviceName = method.getDeclaringClass().getName();
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
-                .serviceName(method.getDeclaringClass().getName())
+                .serviceName(serviceName)
                 .methodName(method.getName())
                 .parameterTypes(method.getParameterTypes())
                 .args(args)
@@ -40,6 +47,26 @@ public class ServiceProxy implements InvocationHandler {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
             //application
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+
+            // 通过注册中心类型（如 "zookeeper,etcd"）获取 Registry 实例(单例)
+            String RegistryKey = rpcConfig.getRegistryConfig().getRegistry();
+            Registry registry = RegistryManager.getRegistry(RegistryKey);
+
+            // 构造服务元信息用于服务发现
+            ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+            serviceMetaInfo.setServiceName(serviceName);
+            serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
+
+            // 从注册中心发现可用的服务实例列表
+            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo);
+            //如果所有节点为空，抛出异常
+            if (CollUtil.isEmpty(serviceMetaInfoList)) {
+                throw new RuntimeException("暂无可用的服务地址: " + serviceName);
+            }
+            // 暂时选择第一个服务实例（后续可替换为负载均衡策略）
+            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+
+
             // 发送请求
             try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
                     .body(bodyBytes)

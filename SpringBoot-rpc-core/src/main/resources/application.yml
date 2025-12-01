@@ -6,7 +6,7 @@ rpc:
   serializer: json
   registryConfig:
     registry: etcd
-    address: http://localhost:2380
+    address: http://localhost:2379
     username: admin
     password: 123456
     timeout: 10000

@@ -3,5 +3,10 @@ server:
 
 rpc:
   serverPort: 8080
-  serverHost: 127.0.0.7
-  serializer: hessian
+  serverHost: 127.0.0.1
+  serializer: json
+  registryConfig:
+    address: http://localhost:6379
+    registry: redis
+    username: root
+    password: 123456

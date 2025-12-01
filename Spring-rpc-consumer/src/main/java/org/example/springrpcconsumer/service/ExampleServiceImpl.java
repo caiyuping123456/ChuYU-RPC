@@ -13,6 +13,11 @@ public class ExampleServiceImpl {
         User user = new User();
         user.setName("chuyu");
         User resultUser = userService.getUser(user);
-        System.out.println(resultUser.getName());
+        if (resultUser != null) {
+            System.out.println(resultUser.getName());
+        }else {
+            System.out.println("mock测试通过");
+        }
+
     }
 }

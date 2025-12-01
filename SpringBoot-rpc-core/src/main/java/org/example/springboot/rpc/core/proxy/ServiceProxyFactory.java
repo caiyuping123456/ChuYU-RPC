@@ -10,7 +10,6 @@ import java.lang.reflect.Proxy;
  *
  服务代理工厂（用于创建代理对象）
  */
-@Component
 public class ServiceProxyFactory {
     /**
      *
@@ -20,7 +19,6 @@ public class ServiceProxyFactory {
      * @param <T>
      * @return
      */
-    @Bean
     public static <T> T getProxy(Class<T> serviceClass) {
 
         if (RpcApplication.getRpcConfig().isMock()) {

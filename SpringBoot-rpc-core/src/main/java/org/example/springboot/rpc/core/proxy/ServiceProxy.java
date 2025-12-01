@@ -6,8 +6,8 @@ import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
-import org.example.springboot.rpc.core.utils.JDKSerializer;
-import org.example.springboot.rpc.core.utils.Serializer;
+import org.example.springboot.rpc.core.serializer.Serializer;
+import org.example.springboot.rpc.core.serializer.SerializerManager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -27,7 +27,7 @@ public class ServiceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws IOException {
         // 指定序列化器
-        Serializer serializer = new JDKSerializer();
+        Serializer serializer = SerializerManager.getSerializer(RpcApplication.getRpcConfig().getSerializer());
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())

@@ -1,10 +1,13 @@
-package org.example.serializer;
+package org.example.springrpcprovider.serializer;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.example.springboot.rpc.core.annotation.RpcSerializer;
+import org.example.springboot.rpc.core.serializer.Serializer;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +16,8 @@ import java.io.IOException;
 /**
  * Hessian 序列化器
  */
+@Component
+@RpcSerializer("hessian")
 public class HessianSerializer implements Serializer {
 
     @Override

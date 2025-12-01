@@ -38,7 +38,7 @@ public class RpcConfig {
     /**
      * 序列化器
      */
-    private String serializer = "";
+    private String serializer = "json";
 
     /**
      *

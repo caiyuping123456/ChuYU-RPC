@@ -6,6 +6,7 @@ import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.http.HttpService;
 import org.example.springboot.rpc.core.http.VertxHttpServer;
+import org.example.springboot.rpc.core.http.tcp.VertxTcpServer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
@@ -36,7 +37,9 @@ public class RpcInitBootstrap implements ImportBeanDefinitionRegistrar {
         final RpcConfig rpcConfig = RpcApplication.getRpcConfig();
         //启动服务器
         if (needServer){
-            HttpService vertxTcpServer = new VertxHttpServer();
+//            HttpService vertxTcpServer = new VertxHttpServer();
+//            vertxTcpServer.doStart(rpcConfig.getServerPort());
+            VertxTcpServer vertxTcpServer = new VertxTcpServer();
             vertxTcpServer.doStart(rpcConfig.getServerPort());
         }else{
             log.info("不启动server");

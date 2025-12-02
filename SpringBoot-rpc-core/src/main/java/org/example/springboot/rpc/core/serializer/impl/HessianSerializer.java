@@ -18,7 +18,7 @@ import java.io.IOException;
  * Hessian 序列化器
  */
 @Component
-@RpcSerializer("hessian")
+@RpcSerializer(value = "hessian",code = 3)
 public class HessianSerializer implements Serializer {
 
     @Override

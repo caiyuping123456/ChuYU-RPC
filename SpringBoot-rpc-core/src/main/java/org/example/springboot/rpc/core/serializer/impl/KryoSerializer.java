@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
  * Kryo 序列化器
  */
 @Component
-@RpcSerializer("kryo")
+@RpcSerializer(value = "kryo",code = 2)
 public class KryoSerializer implements Serializer {
 
     /**

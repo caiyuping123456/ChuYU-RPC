@@ -15,7 +15,7 @@ import java.io.IOException;
  * */
 
 @Component
-@RpcSerializer("json")
+@RpcSerializer(value = "json",code = 1)
 public class JsonSerializer implements Serializer {
 
     //Json对象（用于Java对象序列化和反序列化的对象）

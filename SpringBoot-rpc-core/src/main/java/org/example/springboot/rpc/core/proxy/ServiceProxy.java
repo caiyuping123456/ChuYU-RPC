@@ -6,6 +6,7 @@ import cn.hutool.http.HttpResponse;
 import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.constant.RpcConstant;
+import org.example.springboot.rpc.core.http.tcp.VertxTcpClient;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
 import org.example.springboot.rpc.core.model.ServiceMetaInfo;
@@ -19,6 +20,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -67,16 +70,23 @@ public class ServiceProxy implements InvocationHandler {
             ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
 
 
+            return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo).getData();
             // 发送请求
-            try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
-                    .body(bodyBytes)
-                    .execute()) {
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+//            try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
+//                    .body(bodyBytes)
+//                    .execute()) {
+//                byte[] result = httpResponse.bodyBytes();
+//                // 反序列化
+//                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
+//                return rpcResponse.getData();
+//            }
         }catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
     }

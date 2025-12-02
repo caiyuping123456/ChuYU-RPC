@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 
 @Component
-@RpcSerializer("jdk")
+@RpcSerializer(value = "jdk",code = 0)
 public class JdkSerializer implements Serializer {
 
     //序列化

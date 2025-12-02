@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Slf4j
 public class SerializerManager implements ApplicationContextAware {
-    private static Map<String,Serializer> serializerMap = new ConcurrentHashMap<>();
+    private final static Map<String,Serializer> serializerMap = new ConcurrentHashMap<>();
     private ApplicationContext applicationContext;//上下文对象
 
     private static Map<String,Integer> protocolMessageSerializerEnum = new ConcurrentHashMap<>();

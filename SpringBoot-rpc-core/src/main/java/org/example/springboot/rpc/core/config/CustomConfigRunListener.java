@@ -49,6 +49,7 @@ public class CustomConfigRunListener implements SpringApplicationRunListener {
         Boolean mock = environment.getProperty("rpc.mock", Boolean.class,false);
         String serializer = environment.getProperty("rpc.serializer","json");
         String retryStrategy = environment.getProperty("rpc.retryStrategy","fixedInterval");
+        String loadBalancer = environment.getProperty("rpc.loadBalancer", "random");
 
         // --- 嵌套对象加载 (rpc.registryConfig) ---
         RegistryConfig registryConfig = new RegistryConfig();
@@ -81,6 +82,7 @@ public class CustomConfigRunListener implements SpringApplicationRunListener {
         config.setServerPort(port);
         config.setSerializer(serializer);
         config.setRetryStrategy(retryStrategy);
+        config.setLoadBalancer(loadBalancer);
         config.setRegistryConfig(registryConfig);
 
         // 2. 将配置存储在静态变量中，供 ImportBeanDefinitionRegistrar 访问

@@ -19,7 +19,7 @@ public class RegistryManager implements ApplicationContextAware {
     /**
      * 用于存储注册中心选择
      */
-    private static Map<String,Registry> registryManager = new ConcurrentHashMap<>();
+    private final static Map<String,Registry> registryManager = new ConcurrentHashMap<>();
 
     /**
      * 上下文对象
@@ -39,8 +39,8 @@ public class RegistryManager implements ApplicationContextAware {
     public void init(){
         log.info("注册中心初始化中....");
         //获取所有实现Registry的实现类
-        registryManager = applicationContext.getBeansOfType(Registry.class);
-        for(Registry registry : registryManager.values()){
+        Map<String, Registry> beansOfType = applicationContext.getBeansOfType(Registry.class);
+        for(Registry registry : beansOfType.values()){
             //获取有这个RpcRegistry注解的
             RpcRegistry annotation = registry.getClass().getAnnotation(RpcRegistry.class);
             String key;

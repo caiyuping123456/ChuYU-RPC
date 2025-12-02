@@ -10,3 +10,4 @@ rpc:
     registry: redis
     username: root
     password: 123456
+  loadBalancer: consistentHash

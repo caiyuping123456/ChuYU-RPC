@@ -7,6 +7,8 @@ import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.constant.RpcConstant;
 import org.example.springboot.rpc.core.http.tcp.VertxTcpClient;
+import org.example.springboot.rpc.core.loadbalancer.LoadBalancer;
+import org.example.springboot.rpc.core.loadbalancer.LoadBalancerManager;
 import org.example.springboot.rpc.core.model.RpcRequest;
 import org.example.springboot.rpc.core.model.RpcResponse;
 import org.example.springboot.rpc.core.model.ServiceMetaInfo;
@@ -19,7 +21,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -66,8 +70,12 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无可用的服务地址: " + serviceName);
             }
-            // 暂时选择第一个服务实例（后续可替换为负载均衡策略）
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+            // 负载均衡策略
+            LoadBalancer loadBalancer = LoadBalancerManager.getLoadBalancer(rpcConfig.getLoadBalancer());
+            // 将调用方法名（请求路径）作为负载均衡参数
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
 
             return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo).getData();

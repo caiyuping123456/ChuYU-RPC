@@ -36,7 +36,7 @@ public class RpcConfig {
     private boolean mock = false;
 
     /**
-     * 序列化器
+     * 序列化器（默认为json）
      */
     private String serializer = "json";
 
@@ -47,9 +47,9 @@ public class RpcConfig {
     private RegistryConfig registryConfig = new RegistryConfig();
 
     /**
-     * 负载均衡器
+     * 负载均衡器(默认为随机)
      */
-    private String loadBalancer = "";
+    private String loadBalancer = "random";
 
     /**
      * 重试策略

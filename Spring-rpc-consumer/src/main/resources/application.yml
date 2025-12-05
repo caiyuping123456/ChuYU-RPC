@@ -11,3 +11,4 @@ rpc:
     username: root
     password: 123456
   loadBalancer: consistentHash
+  retryStrategy: exponentialBackoff

@@ -52,9 +52,9 @@ public class RpcConfig {
     private String loadBalancer = "random";
 
     /**
-     * 重试策略
+     * 重试策略(no重试机制)
      */
-    private String retryStrategy = "";
+    private String retryStrategy = "no";
 
     /**
      * 容错策略(默认是快速失效策略)

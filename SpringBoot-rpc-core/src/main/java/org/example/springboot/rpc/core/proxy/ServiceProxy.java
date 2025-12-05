@@ -6,6 +6,7 @@ import cn.hutool.http.HttpResponse;
 import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.constant.RpcConstant;
+import org.example.springboot.rpc.core.fault.retry.RetryStrategyManager;
 import org.example.springboot.rpc.core.http.tcp.VertxTcpClient;
 import org.example.springboot.rpc.core.loadbalancer.LoadBalancer;
 import org.example.springboot.rpc.core.loadbalancer.LoadBalancerManager;
@@ -77,8 +78,12 @@ public class ServiceProxy implements InvocationHandler {
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
-
-            return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo).getData();
+            try {
+                RpcResponse rpcResponse = RetryStrategyManager.getRetryStrategy(rpcConfig.getRetryStrategy()).doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
+                return rpcResponse.getData();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             // 发送请求
 //            try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
 //                    .body(bodyBytes)
@@ -89,12 +94,6 @@ public class ServiceProxy implements InvocationHandler {
 //                return rpcResponse.getData();
 //            }
         }catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
     }

@@ -116,9 +116,7 @@ public class ServiceProxy implements InvocationHandler {
              * 这里直接对TCP进行封装
              * 重试策略
              */
-            rpcResponse = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy()).doRetry(() -> {
-                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
-            });
+            rpcResponse = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy()).doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
         }catch (Exception e){
             /**
              * 容错策略

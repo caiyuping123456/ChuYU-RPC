@@ -41,8 +41,7 @@ public class LoadBalancerManager implements ApplicationContextAware {
             //表示有注解，同时给注解中的值进行了赋值
             if(annotation != null && !annotation.loadBalancer().isEmpty()) key = annotation.loadBalancer().toLowerCase();
             // 如果没有注解或者有注解同时没有给值赋值
-            else key = toLowerAndUpper(loadBalancer.getClass().getSimpleName().toString());
-
+            else key = loadBalancer.getClass().getSimpleName().toString();
             loadBalancerMap.put(key,loadBalancer);
         }
         log.info("负载均衡器初始化成功！");
@@ -58,13 +57,5 @@ public class LoadBalancerManager implements ApplicationContextAware {
         }
         log.info("正在使用"+key+"负载均衡器");
         return loadBalancerMap.get(type);
-    }
-
-    private String toLowerAndUpper(String s) {
-        if(s == null && s.equals("") && (s.charAt(0)<='9'&& s.charAt(0)>='0')){
-            throw new RuntimeException("注解值不能使用数字开头或者注解为空");
-        }
-        //转为驼峰式
-        return String.valueOf(s.charAt(0)).toLowerCase()+s.substring(1);
     }
 }

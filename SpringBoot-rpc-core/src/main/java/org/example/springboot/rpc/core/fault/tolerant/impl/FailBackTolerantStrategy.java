@@ -1,12 +1,17 @@
-package org.example.springboot.rpc.core.fault.tolerant;
+package org.example.springboot.rpc.core.fault.tolerant.impl;
 
+import org.example.springboot.rpc.core.annotation.Tolerant;
+import org.example.springboot.rpc.core.fault.tolerant.TolerantStrategy;
 import org.example.springboot.rpc.core.model.RpcResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
  * 故障恢复策略
  */
+@Component
+@Tolerant(tolerant = "failBack")
 public class FailBackTolerantStrategy implements TolerantStrategy {
     /**
      * 故障恢复策略

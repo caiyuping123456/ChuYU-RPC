@@ -3,10 +3,13 @@ package org.example.springboot.rpc.core.proxy;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.rpc.core.config.RpcApplication;
 import org.example.springboot.rpc.core.config.RpcConfig;
 import org.example.springboot.rpc.core.constant.RpcConstant;
 import org.example.springboot.rpc.core.fault.retry.RetryStrategyManager;
+import org.example.springboot.rpc.core.fault.tolerant.TolerantStrategy;
+import org.example.springboot.rpc.core.fault.tolerant.TolerantStrategyManager;
 import org.example.springboot.rpc.core.http.tcp.VertxTcpClient;
 import org.example.springboot.rpc.core.loadbalancer.LoadBalancer;
 import org.example.springboot.rpc.core.loadbalancer.LoadBalancerManager;
@@ -31,6 +34,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * 服务代理（JDK 动态代理）
  */
+@Slf4j
 public class ServiceProxy implements InvocationHandler {
     /**
      * 调用代理
@@ -77,13 +81,16 @@ public class ServiceProxy implements InvocationHandler {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
-
+            RpcResponse rpcResponse = null;
             try {
-                RpcResponse rpcResponse = RetryStrategyManager.getRetryStrategy(rpcConfig.getRetryStrategy()).doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
+                rpcResponse = RetryStrategyManager.getRetryStrategy(rpcConfig.getRetryStrategy()).doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
                 return rpcResponse.getData();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                log.info("容错机制启动");
+                TolerantStrategy tolerantStrategy = TolerantStrategyManager.getTolerantStrategy(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
             }
+            return rpcResponse.getData();
             // 发送请求
 //            try (HttpResponse httpResponse = HttpRequest.post(getUrl(rpcConfig.getServerHost(),rpcConfig.getServerPort()))
 //                    .body(bodyBytes)

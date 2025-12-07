@@ -59,5 +59,5 @@ public class RpcConfig {
     /**
      * 容错策略(默认是快速失效策略)
      */
-    private String tolerantStrategy = "";
+    private String tolerantStrategy = "failFast";
 }

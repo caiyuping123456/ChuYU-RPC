@@ -1,17 +1,17 @@
 package org.example.springboot.rpc.core.annotation;
 
-
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
 /**
- * 重试机制注解
+ * 容错机制注解
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
 @Component
-public @interface Retry {
-    String KEYS();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+
+public @interface Tolerant {
+    String tolerant();
 }

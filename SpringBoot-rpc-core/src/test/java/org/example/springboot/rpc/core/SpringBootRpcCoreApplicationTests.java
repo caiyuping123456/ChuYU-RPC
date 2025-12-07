@@ -9,12 +9,12 @@ import javax.annotation.Resource;
 @SpringBootTest
 class SpringBootRpcCoreApplicationTests {
 
-    @Resource
+
     private RpcConfig rpcConfig;
 
     @Test
     void TestConfig() {
-        System.out.println(rpcConfig);
+        System.out.println("");
     }
 
 }

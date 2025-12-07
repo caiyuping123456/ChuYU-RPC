@@ -1,13 +1,18 @@
-package org.example.springboot.rpc.core.fault.tolerant;
+package org.example.springboot.rpc.core.fault.tolerant.impl;
 
+import org.example.springboot.rpc.core.annotation.Tolerant;
+import org.example.springboot.rpc.core.fault.tolerant.TolerantStrategy;
 import org.example.springboot.rpc.core.model.RpcResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
  * 快速失效机制----容错机制（本层有错误，立即报告给上层（调用方））
  */
-public class FailFastTolerantStrategy implements TolerantStrategy{
+@Component
+@Tolerant(tolerant = "failFast")
+public class FailFastTolerantStrategy implements TolerantStrategy {
     /**
      * 实现方法
      * @param context

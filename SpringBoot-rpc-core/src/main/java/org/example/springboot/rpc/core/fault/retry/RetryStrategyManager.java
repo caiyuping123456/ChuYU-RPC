@@ -42,23 +42,17 @@ public class RetryStrategyManager implements ApplicationContextAware {
             Retry annotation = retryStrategy.getClass().getAnnotation(Retry.class);
             String key;
             if (annotation==null&&!annotation.KEYS().isEmpty()) key = annotation.KEYS().toLowerCase();
-            else key = toLowerUpper(annotation.KEYS());
+            else key = retryStrategy.getClass().getSimpleName().toLowerCase();
             RetryStrategyMap.put(key, retryStrategy);
         }
         log.info("重试机制初始化完成！");
     }
 
-    private static String toLowerUpper(String keys) {
-        if (keys == null&&keys.equals("")) throw new RuntimeException("请为注解的属性进行赋值");
-        //这个是推荐驼峰格式
-        return String.valueOf(keys.charAt(0))+keys.substring(1);
-    }
-
     public static RetryStrategy getRetryStrategy(String key){
-        if (key == null && key.equals("") && !RetryStrategyMap.containsKey(toLowerUpper(key))) {
+        if (key == null && key.equals("") && !RetryStrategyMap.containsKey(key.toLowerCase())) {
             throw new RuntimeException("重试机制：传入的key值为空或者Map集合中没有这个机制");
         }
-        return RetryStrategyMap.get(toLowerUpper(key));
+        return RetryStrategyMap.get(key.toLowerCase());
     }
 
 

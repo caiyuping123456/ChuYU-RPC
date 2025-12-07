@@ -72,10 +72,10 @@ public class SerializerManager implements ApplicationContextAware {
     }
 
     public static Integer getProtocolMessageSerializerEnumByKey(String key){
-        if (key==null&&key.equals("")&&!protocolMessageSerializerEnum.containsKey(key)){
+        if (key==null&&key.equals("")&&!protocolMessageSerializerEnum.containsKey(key.toLowerCase())){
             throw new RuntimeException("传入的key值为空或者map中没有这个key");
         }
-        return protocolMessageSerializerEnum.get(key);
+        return protocolMessageSerializerEnum.get(key.toLowerCase());
     }
 
     public static String getProtocolMessageSerializerEnumByValue(Integer value){
